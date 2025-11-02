@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Email Header Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div class="brand">Email Header Analyzer</div>
+      <nav class="nav">
+        <a href="/" class="nav-link">Analyze</a>
+        <a href="https://support.google.com/mail/answer/29436" target="_blank" class="nav-link">Gmail guide</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>CNS miniProject @ Email Header Analyser - By Roll No. 35,43,49,51,52</p>
+    </div>
+  </footer>
+
+  <script>
+    // Copy-to-clipboard helpers
+    function copyText(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText || el.value || "").then(()=>{
+        const btn = document.querySelector(`[data-copy="${id}"]`);
+        if (btn) {
+          const prev = btn.innerText;
+          btn.innerText = "Copied";
+          setTimeout(()=> btn.innerText = prev, 1200);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

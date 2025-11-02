@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <div class="card-header">
+    <h2>Analyze headers</h2>
+    <p class="muted">Gmail → three dots → “Show original” → copy the full header block and paste below.</p>
+  </div>
+  <form method="post" class="stack">
+    <label for="headers" class="label">Raw headers</label>
+    <textarea id="headers" name="headers" rows="16" class="textarea" placeholder="Delivered-To: ...&#10;Return-Path: ...&#10;Received: from ..."></textarea>
+    <div class="row between">
+      <div class="row gap">
+        <button type="button" class="btn ghost" onclick="document.getElementById('headers').value='';">Clear</button>
+        <button type="button" class="btn ghost" data-copy="headers" onclick="copyText('headers')">Copy</button>
+      </div>
+      <button type="submit" class="btn primary">Analyze</button>
+    </div>
+  </form>
+</section>
+
+<section class="tips card">
+  <div class="grid two">
+    <div>
+      <h3>Quick steps</h3>
+      <ol class="list">
+        <li>Open email in Gmail</li>
+        <li>Click the three dots</li>
+        <li>Select “Show original”</li>
+        <li>Copy the plain-text header block</li>
+      </ol>
+    </div>
+    <div>
+      <h3>What you’ll get</h3>
+      <ul class="list">
+        <li>Key headers (From, To, Subject, Date, IDs)</li>
+        <li>SPF / DKIM / DMARC results</li>
+        <li>Server hops with IPs and dates</li>
+        <li>Basic risk flags</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{% endblock %}

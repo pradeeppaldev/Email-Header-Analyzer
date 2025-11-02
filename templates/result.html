@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row wrap gap">
+  <section class="card grow">
+    <div class="card-header row between">
+      <h2>Summary</h2>
+      <a class="btn ghost" href="/">Analyze another</a>
+    </div>
+
+    <div class="grid two">
+      <div>
+        <h3>Key headers</h3>
+        <dl class="kv">
+          {% for k,v in key_fields.items() %}
+          <div class="kv-row">
+            <dt>{{k}}</dt><dd>{{ v or '—' }}</dd>
+          </div>
+          {% endfor %}
+        </dl>
+      </div>
+      <div>
+        <h3>Authentication</h3>
+        <div class="pills">
+          <span class="pill {{ 'ok' if auth.spf=='pass' else 'warn' if auth.spf else 'muted' }}">SPF: {{ auth.spf or 'unknown' }}</span>
+          <span class="pill {{ 'ok' if auth.dkim=='pass' else 'warn' if auth.dkim else 'muted' }}">DKIM: {{ auth.dkim or 'unknown' }}</span>
+          <span class="pill {{ 'ok' if auth.dmarc=='pass' else 'warn' if auth.dmarc else 'muted' }}">DMARC: {{ auth.dmarc or 'unknown' }}</span>
+        </div>
+        <details class="details">
+          <summary>Raw auth lines</summary>
+          <pre class="code">{{ '\n'.join(auth.raw) }}</pre>
+        </details>
+
+        <h3>Alignment</h3>
+        <dl class="kv">
+          <div class="kv-row">
+            <dt>From domain</dt><dd>{{ align.from_domain or '—' }}</dd>
+          </div>
+          <div class="kv-row">
+            <dt>Return-Path domain</dt><dd>{{ align.return_path_domain or '—' }}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="card grow">
+    <div class="card-header row between">
+      <h2>Received chain</h2>
+      {% if received|length == 0 %}<span class="muted">No Received lines</span>{% endif %}
+    </div>
+    <ol class="timeline">
+      {% for hop in received %}
+      <li class="timeline-item">
+        <div class="tl-head row between">
+          <div class="row gap">
+            <span class="badge">Hop {{ loop.index }}</span>
+            <span class="muted tl-date">{{ hop.get('date','') }}</span>
+          </div>
+          <span class="pill">{{ hop.get('with','') or 'SMTP' }}</span>
+        </div>
+        <div class="grid two">
+          <div>
+            <div class="label sm">From</div>
+            <div class="mono">{{ hop.get('from','') }}</div>
+          </div>
+          <div>
+            <div class="label sm">By</div>
+            <div class="mono">{{ hop.get('by','') }}</div>
+          </div>
+        </div>
+        <div class="row between sm">
+          <div class="label sm">IP</div>
+          <div class="mono">{{ hop.get('ip','') }}</div>
+        </div>
+        <details class="details">
+          <summary>Raw</summary>
+          <pre class="code">{{ hop.raw }}</pre>
+        </details>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="card slim">
+    <div class="card-header">
+      <h2>Flags</h2>
+    </div>
+    <ul class="list">
+      {% if flags %}
+        {% for f in flags %}<li>{{ f }}</li>{% endfor %}
+      {% else %}
+        <li>No significant issues detected by basic checks.</li>
+      {% endif %}
+    </ul>
+  </section>
+
+  <section class="card">
+    <div class="card-header row between">
+      <h2>Raw headers</h2>
+      <button class="btn ghost" data-copy="rawheaders" onclick="copyText('rawheaders')">Copy</button>
+    </div>
+    <pre id="rawheaders" class="code scroll">{{ raw }}</pre>
+  </section>
+</div>
+{% endblock %}
